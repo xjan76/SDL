@@ -1,0 +1,25 @@
+ansible_user: ${config["ans_username"]}
+ansible_password: ${config["ans_password"]}
+
+post_scripts_folder_name: files
+post_scripts_folder_on_target: c:\files
+
+# hardware
+cpus: ${config["win_cpus"]}
+ram: ${config["win_ram"]}
+
+admin_account: "{{ ansible_user }}"
+
+customization_method: windows_cli
+customization_options:
+  existing_vm: true
+  autologon: true
+  hostname: "{{ parent_hostname }}"
+  domain: "{{ domain }}"
+  dns_servers: "{{ dns_servers }}"
+  password: "{{ ansible_password }}"
+
+# connection options
+real_connection_plugin: ssh 
+ansible_shell_type: powershell
+

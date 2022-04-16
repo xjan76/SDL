@@ -1,0 +1,32 @@
+- name: Verifying regular accounts
+  win_user:
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    password_never_expires: yes
+    state: present
+    groups: "{{ item.groups | default(['Administrators']) }}"
+  loop: "{{ user_accounts + extra_accounts }}"
+  when:
+    - ansible_facts.windows_domain_role != "Primary domain controller"
+    - ansible_facts.windows_domain_role != "Backup domain controller"
+
+- name: Verifying DC accounts
+  win_domain_user:
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    password_never_expires: yes
+    state: present
+    groups: "{{ item.groups | default(['Domain Admins']) }}"
+    domain_username: "{{ ansible_user }}@{{ ad_domain_name }}"
+    domain_password: "{{ ansible_password }}"
+  loop: "{{ user_accounts + extra_accounts }}"
+  when:
+    - ansible_facts.windows_domain_role == "Primary domain controller"
+    - item.username != admin_account
+
+- name: Creating a profile for required accounts
+  win_user_profile:
+    username: "{{ item.username }}"
+    name: "{{ item.username }}"
+    state: present
+  loop: "{{ user_accounts + extra_accounts }}"

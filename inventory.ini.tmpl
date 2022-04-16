@@ -1,0 +1,21 @@
+#ALL HOSTNAMES HAVE TO BE UNIQUE
+
+% for typeName in config["enviroment"]["os_templates"].keys():
+[${typeName}:children]
+    % for osName in config["enviroment"]["os_templates"][typeName].keys():
+${osName}
+    % endfor
+
+% endfor
+
+% for typeName in config["enviroment"]["os_templates"].keys():
+    % for osName in config["enviroment"]["os_templates"][typeName].keys():
+[${osName}]
+        % for machineDescription in config["exercise"].values():
+            % if machineDescription["os"]==osName:
+${machineDescription["hostname"]}
+            % endif
+        % endfor
+
+    % endfor
+% endfor

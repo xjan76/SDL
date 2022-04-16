@@ -1,0 +1,13 @@
+ansible_python_interpreter: /usr/bin/python3
+
+
+ansible_user: ${config["ans_username"]}
+ansible_password: ${config["ans_password"]}
+
+cpus: ${config["lin_cpus"]}
+ram: ${config["lin_ram"]}
+
+# for ssh
+ansible_deployed_user: ${config["ans_username"]}
+ansible_become: True
+ansible_become_user: root

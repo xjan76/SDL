@@ -1,0 +1,9 @@
+- name: Define networks vars for vmware_guest
+  set_fact:
+    network_params_for_clone:
+      ip: "{{ primary_network.ipv4 | ipaddr('address') }}"
+      netmask: "{{ primary_network.ipv4 | ipaddr('netmask') }}"
+      gateway: "{{ primary_network.ipv4_gateway }}"
+  when:
+    - primary_network.ipv4 is defined
+    - customization_options != {}

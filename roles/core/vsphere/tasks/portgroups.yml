@@ -1,0 +1,9 @@
+- name: Making sure vSphere portgroups are present
+  vmware_dvs_portgroup:
+    portgroup_name: "{{ primary_network.name }}"
+    switch_name: "{{ dvswitch_name }}"
+    vlan_id: "{{ primary_network.vlan }}"
+    num_ports: 12
+    portgroup_type: earlyBinding
+    state: present
+  delegate_to: localhost

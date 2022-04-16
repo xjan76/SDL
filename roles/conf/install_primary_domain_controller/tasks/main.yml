@@ -1,0 +1,35 @@
+---
+- name: Install AD-Domain-Services role
+  win_feature:
+    name: AD-Domain-Services
+    include_management_tools: yes
+    state: present
+  register: win_feature
+
+- name: Creating new Windows domain
+  win_domain:
+    create_dns_delegation: no
+    dns_domain_name: "{{ ad_domain_name }}"
+    domain_netbios_name: "{{ domain_netbios }}"
+    domain_mode: WinThreshold
+    forest_mode: WinThreshold
+    safe_mode_password: "{{ dc_safe_mode_password }}"
+  register: win_domain
+
+- block:
+    - name: Rebooting, if required
+      win_reboot:
+        reboot_timeout: 1200
+
+    - name: Checking PDC availability
+      win_shell: "{{ lookup('file', 'Check-PDCAvailability.ps1') }}"
+      when: win_domain.changed
+
+    - name: Gathering facts
+      gather_facts:
+
+    - name: Checking DC status
+      include_role:
+        name: conf/dc_check
+
+  when: win_domain.reboot_required

@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  pre_tasks:
+    - set_fact:
+        to_be_deployed: "{{ to_be_deployed|default([]) + [item] }}"
+      with_inventory_hostnames: "{{ machine }}"
+
+- hosts: "{{ hostvars['localhost'].to_be_deployed }}"
+  serial: 1
+  gather_facts: false
+
+  roles:
+    - core/populate_inventory
+
+- hosts: deployable
+  serial: 82
+  gather_facts: false
+  strategy: host_pinned
+
+  pre_tasks:
+    - setup:
+        filter: "*_time"
+      delegate_to: localhost
+
+  module_defaults:
+    vmware_guest: "{{ vmware_defaults }}"
+    vmware_guest_disk: "{{ vmware_defaults }}"
+    vmware_guest_tools_wait: "{{ vmware_defaults }}"
+    vmware_guest_vm_shell: "{{ vmware_defaults }}"
+    vmware_guest_network: "{{ vmware_defaults }}"
+    vmware_guest_info: "{{ vmware_defaults }}"
+    vmware_guest_powerstate: "{{ vmware_defaults }}"
+    vmware_dvs_portgroup: "{{ vmware_defaults }}"
+    
+  roles:
+    - core/vsphere
+    - core/base_image
+    - core/users
+    - core/customization
+
+

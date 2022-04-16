@@ -1,0 +1,1 @@
+do {Start-Sleep -Seconds 1} until ((Get-ADDomainController -DomainName "{{ ad_domain_name }}" -Discover | Select-Object -ExpandProperty Domain) -eq "{{ ad_domain_name }}")

@@ -1,0 +1,22 @@
+- name: Set vmware tools connection
+  set_fact:
+    ansible_connection: vmware_tools
+    ansible_vmware_host: "{{ vmware_defaults.hostname }}"
+    ansible_vmware_user: "{{ vmware_defaults.username }}"
+    ansible_vmware_password: "{{ vmware_defaults.password }}"
+    ansible_vmware_validate_certs: no
+    ansible_vmware_guest_path: "{{ datacenter }}/vm/{{ folder }}/{{ vm_name }}"
+    ansible_vmware_tools_user: "{{ ansible_user }}"
+    ansible_vmware_tools_password: "{{ ansible_password }}"
+    ansible_shell_type: "{{ ansible_shell_type }}"
+
+- name: Waiting for connection
+  wait_for_connection:
+    timeout: 120
+  when: '"os_windows" in group_names'
+
+- name: Gathering facts
+  gather_facts:
+
+- include_tasks: "configuration/{{ customization_method }}.yml"
+  when: primary_network.ipv4 is defined

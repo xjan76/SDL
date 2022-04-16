@@ -1,0 +1,3 @@
+- name: Configure NIC-s
+  win_shell: "{{ lookup('template', 'OpenNebula-Configure-Network.ps1') }}"
+  ignore_unreachable: yes

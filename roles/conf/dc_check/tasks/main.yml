@@ -1,0 +1,10 @@
+---
+- name: Waiting for Active Directory services 
+  win_shell: "{{ lookup('file', 'PostReboot-Check.ps1') }}"
+
+- name: Getting domain info
+  win_shell: Get-ADDomain
+  register: domain_check
+  retries: 10
+  delay: 5
+  until: domain_check.rc == 0

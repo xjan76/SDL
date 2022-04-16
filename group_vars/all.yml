@@ -1,0 +1,21 @@
+# global defaults here
+#
+
+exercise_name: SDL
+one_defaults:
+  api_url: 
+  api_username: 
+  api_password: 
+
+
+# networking
+domain: thesis.demo
+ldap_domain: "DC={{ domain.split('.')[0] }},DC={{domain.split('.')[1]}}"
+
+# DNS
+dns_servers:
+  - 
+  - 
+dns_domain: "{{ domain }}"
+dns_search:
+  - "{{ domain }}"

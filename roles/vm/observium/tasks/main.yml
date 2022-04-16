@@ -1,0 +1,113 @@
+---
+- name: Install observium requirements
+  apt:
+    pkg:
+      - libapache2-mod-php7.4
+      - php7.4-cli
+      - php7.4-mysql
+      - php7.4-gd
+      - php7.4-json
+      - php7.4-bcmath
+      - php7.4-mbstring
+      - php7.4-opcache
+      - php7.4-curl
+      - php7.4-apcu
+      - php-ldap
+      - php-pear
+      - snmp
+      - fping
+      - rrdtool
+      - whois
+      - mysql-server
+      - mysql-client
+      - subversion
+      - mtr-tiny
+      - ipmitool
+      - graphviz 
+      - imagemagick 
+      - apache2
+      - python3-mysqldb 
+      - python3-pymysql 
+      - python-is-python3
+    state: present
+
+- name: Create observium directory
+  file:
+    path: /opt/observium
+    state: directory
+
+- name: Download installer
+  get_url:
+    url: http://www.observium.org/observium-community-latest.tar.gz
+    dest: /opt/observium-community-latest.tar.gz
+    mode: 755
+
+- name: Untar
+  ansible.builtin.unarchive:
+    src: /opt/observium-community-latest.tar.gz
+    dest: /opt/
+    remote_src: yes
+
+- name: Create MariaDB database for observium
+  mysql_db:
+    name: observium
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: Password.123
+    state: present
+
+- name: Create MariaDB user
+  mysql_user:
+    name: sdl
+    password: Password.123
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: Password.123
+    priv: 'observium.*:ALL,GRANT'
+    state: present
+
+- name: Template observium conf
+  template:
+    src: templates/config.php.j2
+    dest: /opt/observium/config.php
+
+- name: initialize observium
+  command: "/opt/observium/discovery.php -u"
+
+- name: Create directory
+  file:
+    path: /opt/observium/logs
+    state: directory
+
+- name: Create directory
+  file:
+    path: /opt/observium/rrd
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Template apache conf
+  template:
+    src: templates/apache.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+
+- name: a2dismod
+  command: "a2dismod mpm_event"
+
+- name: a2enmod 
+  command: "a2enmod mpm_prefork"
+
+- name: a2enmod rewrite
+  command: "a2enmod rewrite"
+
+- name: apache2ctl restart
+  command: "apache2ctl restart"
+
+- name: adduser
+  command: "/opt/observium/adduser.php sdl Password.123 10"
+
+- name: discovery
+  command: "/opt/observium/discovery.php -h all"
+
+- name: poll
+  command: "/opt/observium/poller.php -h all"

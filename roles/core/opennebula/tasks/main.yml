@@ -1,0 +1,22 @@
+- name: Start undeploy
+  include_tasks: undeploy.yml
+  when: deploy_mode == 'undeploy' or deploy_mode == 'redeploy'
+
+- include_tasks: deploy.yml
+
+- include_tasks: connection.yml
+
+- name: Gathering facts...
+  gather_facts:
+
+- include_tasks: network.yml
+  when:
+    - fresh_deploy
+
+- include_tasks: new_connection.yml
+
+- set_fact:
+    vsphere_deploy: false
+
+- name: Gathering facts...
+  gather_facts:

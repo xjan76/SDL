@@ -1,0 +1,74 @@
+- name: VM lookup
+  vmware_guest_info:
+    datacenter: "{{ datacenter }}"
+    name: "{{ vm_name }}"
+    folder: "{{ folder }}"
+    schema: vsphere
+    properties:
+      - guest.ipAddress
+  delegate_to: localhost
+  failed_when:
+    - vmware_guest_info.msg is defined
+    - "'non-existing VM' not in vmware_guest_info.msg"
+  register: vmware_guest_info
+
+- set_fact:
+    fresh_deploy: "{{ vmware_guest_info.msg is defined and 'non-existing VM' in vmware_guest_info.msg }}"
+
+- name: Clone VM
+  vmware_guest:
+    wait_for_customization: "{{ True if customization_options != {} else False }}"
+    wait_for_ip_address: "{{ True if ip_offset is not defined else False }}"
+    datacenter: "{{ datacenter }}"
+    name: "{{ vm_name }}"
+    template: "{{ vm_template }}"
+    folder: "{{ folder }}"
+    state: present
+    cluster: "{{ cluster }}"
+    datastore: "{{ datastore }}"
+    resource_pool: "{{ resource_pool }}"
+    networks:
+      - "{{ {'name': primary_network.name, 'device_type': device_type } | combine(network_params_for_clone | default({})) }}"
+    hardware:
+      num_cpus: "{{ cpus }}"
+      memory_mb : "{{ ((lookup('vars', 'ram') | human_to_bytes) / 1024 / 1024) | int }}"
+    customization: "{{ customization_options }}"
+  delegate_to: localhost
+  when: fresh_deploy
+
+- name: Start VM
+  vmware_guest_powerstate:
+    state: powered-on
+    name: '{{ vm_name }}'
+    folder: '{{ folder }}'
+  when: fresh_deploy
+  delegate_to: localhost
+
+- name: Windows IP validation
+  block:
+
+  - name: Gather deployed machine info
+    vmware_guest_info:
+      datacenter: "{{ datacenter }}"
+      name: "{{ vm_name }}"
+      folder: "{{ folder }}"
+      properties:
+        - guest.ipAddress
+      schema: vsphere
+    delegate_to: localhost
+    register: win_vm_guest_info
+    retries: 60
+    delay: 1
+
+  - name: Errors occurred, redeploying
+    include_tasks: "{{ item }}"
+    loop:
+      - undeploy.yml
+      - deploy.yml
+    when: win_vm_guest_info.instance.guest.ipAddress != primary_network.ipv4 | ipaddr('address')
+
+  when:
+    - primary_network.ipv4 is defined
+    - '"os_windows" in group_names'
+    - customization_options != {}
+    - fresh_deploy

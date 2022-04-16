@@ -1,0 +1,3 @@
+---
+- name: Adding required Users, groups and OUs for Observium
+  win_shell: "{{ lookup('template', 'Prepare-observium.ps1') }}"

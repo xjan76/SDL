@@ -1,0 +1,16 @@
+ram: 
+
+primary_network:
+  name: 
+  ipv4: 
+  ipv4_gateway: 
+  vlan: 
+
+new_network:
+  name: 
+  ipv4: 
+  ipv4_gateway: 
+
+dns_servers:
+  - 
+  - 

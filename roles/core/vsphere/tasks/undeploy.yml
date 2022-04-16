@@ -1,0 +1,11 @@
+- name: Undeploy VM
+  vmware_guest:
+    datacenter: "{{ datacenter }}"
+    name: "{{ vm_name }}"
+    state: absent
+    force: yes
+  delegate_to: localhost
+
+- name: Stop executing tasks after undeploying
+  meta: end_host
+  when: deploy_mode == 'undeploy'

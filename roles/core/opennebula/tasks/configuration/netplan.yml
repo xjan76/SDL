@@ -1,0 +1,9 @@
+- name: Upload netplan configuration
+  template:
+    src: opennebula_netplan.yml.j2
+    dest: /etc/netplan/01-netcfg.yaml
+  become: YES
+
+- name: apply netplan
+  command: netplan apply
+  become: YES

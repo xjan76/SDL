@@ -1,0 +1,16 @@
+ram: "${config["ram"]}"
+
+primary_network:
+  name: ${config["network"]["name"]}
+  ipv4: ${config["network"]["ipv4"]}
+  ipv4_gateway: ${config["network"]["ipv4_gateway"]}
+  vlan: ${config["network"]["vlan"]}
+
+new_network:
+  name: ${config["opennebula"]["initial_network"]["name"]}
+  ipv4: ${config["opennebula"]["initial_network"]["ipv4"]}
+  ipv4_gateway: ${config["opennebula"]["initial_network"]["ipv4_gateway"]}
+
+dns_servers:
+  - ${config["dns_servers"]["dns1"]}
+  - ${config["dns_servers"]["dns2"]}

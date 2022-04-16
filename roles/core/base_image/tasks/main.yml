@@ -1,0 +1,10 @@
+- name: Configure Windows machine
+  include_tasks: windows.yml
+  when:
+    - ansible_system == "Win32NT"
+
+- name: Configure Linux machine
+  include_tasks: linux.yml
+  when:
+    - ansible_system == "Linux"
+

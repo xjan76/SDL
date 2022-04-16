@@ -1,0 +1,44 @@
+# global defaults here
+#
+
+% if config["environment"]=="vsphere":
+datacenter: ${config["vs_datacenter"]}
+root_folder: ${config["vs_root_folder"]}
+folder: ${config["vs_folder"]}
+cluster: ${config["vs_cluster"]}
+datastore: ${config["vs_datastore"]}
+resource_pool: ${config["vs_resource_pool"]}
+dvswitch_name: ${config["vs_dvswitch"]}
+% endif
+
+exercise_name: ${config["exercise_name"]}
+
+% if config["environment"]=="vsphere":
+vmware_defaults:
+  hostname: ${config["env_hostname"]}
+  username: ${config["env_username"]}
+  password: ${config["env_password"]}
+  validate_certs: no
+% elif config["environment"]=="opennebula":
+one_defaults:
+  api_url: "http://${config["env_hostname"]}:2633/RPC2"
+  api_username: ${config["env_username"]}
+  api_password: ${config["env_password"]}
+% endif
+
+% if config["environment"]=="vsphere":
+vcenter_username: "{{ vmware_defaults.username }}"
+vcenter_password: "{{ vmware_defaults.password }}"
+% endif
+
+# networking
+domain: ${config["ex_domain"]}
+ldap_domain: "DC={{ domain.split('.')[0] }},DC={{domain.split('.')[1]}}"
+
+# DNS
+dns_servers:
+  - "${config["ex_dns1"]}"
+  - "${config["ex_dns2"]}"
+dns_domain: "{{ domain }}"
+dns_search:
+  - "{{ domain }}"

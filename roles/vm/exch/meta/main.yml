@@ -1,0 +1,3 @@
+dependencies:
+  - role: conf/install_exchange
+    when: fresh_deploy

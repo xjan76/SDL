@@ -1,0 +1,6 @@
+- name: Waiting for system to become reachable
+  wait_for_connection:
+    timeout: 120
+
+- include_tasks: "configuration/{{ customization_method }}.yml"
+  when: new_network.ipv4 is defined

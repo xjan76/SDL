@@ -1,0 +1,39 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  pre_tasks:
+    - set_fact:
+        to_be_deployed: "{{ to_be_deployed|default([]) + [item] }}"
+      with_inventory_hostnames: "{{ machine }}"
+
+- hosts: "{{ hostvars['localhost'].to_be_deployed }}"
+  serial: 1
+  gather_facts: false
+
+  roles:
+    - core/populate_inventory
+
+- hosts: deployable
+  serial: 60
+  gather_facts: false
+  strategy: host_pinned
+
+  pre_tasks:
+    - setup:
+        filter: "*_time"
+      delegate_to: localhost
+
+  module_defaults:
+    one_vm: "{{ one_defaults }}"
+    one_host: "{{ one_defaults }}"
+    one_image: "{{ one_defaults }}"
+    one_image_info: "{{ one_defaults }}"
+    one_service: "{{ one_defaults }}"
+    one_template: "{{ one_defaults }}"
+    
+  roles:
+    - core/opennebula
+    - core/base_image
+    - core/users
+    - core/customization

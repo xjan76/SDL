@@ -1,0 +1,20 @@
+- name: Set correct time
+  win_shell: "{{ lookup('file', 'Configure-Time.ps1') }}"
+
+- name: Apply windows baseconf
+  win_shell: "{{ lookup('file', 'Windows_baseconf.ps1') }}"
+
+- name: Enable RDP service
+  win_shell: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
+
+- name: Enable RDP firewall
+  win_shell: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+- name: Changing Windows hostname
+  win_hostname:
+    name: "{{ parent_hostname }}"
+  register: win_hostname
+
+- name: Rebooting, if required
+  win_reboot:
+  when: win_hostname.reboot_required

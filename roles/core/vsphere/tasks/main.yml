@@ -1,0 +1,19 @@
+- include_tasks: vmware_guest.yml
+
+- name: Start undeploy
+  include_tasks: undeploy.yml
+  when: deploy_mode == 'undeploy' or deploy_mode == 'redeploy'
+
+- include_tasks: portgroups.yml
+
+- include_tasks: deploy.yml
+
+- include_tasks: network.yml
+
+- include_tasks: connection.yml
+
+- set_fact: 
+    vsphere_deploy: True
+
+- name: Gathering facts...
+  gather_facts:

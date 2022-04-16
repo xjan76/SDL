@@ -1,0 +1,50 @@
+- name: Modify /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127.0.1.2'
+    line: '127.0.1.2 {{ ansible_hostname }}'
+    state: present
+
+- name: Modify /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127.0.1.1'
+    line: '127.0.1.1 {{ parent_hostname }}.{{ domain }} {{ parent_hostname }}'
+    state: present
+
+- name: Set hostname
+  hostname:
+    name: "{{ parent_hostname }}"
+
+- name: Modify /etc/hosts again
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127.0.1.2'
+    state: absent
+
+- name: Ensure the locale exists
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: set as default locale
+  command: localectl set-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8
+
+- name: Ensure libuser is present
+  package:
+    name: libuser
+    use: "{{ 'dnf' if ansible_distribution == 'CentOS' else 'auto' }}"
+  when: local_account_support
+
+- name: enable SSH forwarding for sudo
+  lineinfile:
+    dest: /etc/sudoers
+    insertafter: '^#?\s*Defaults\s+env_keep\b'
+    line: 'Defaults    env_keep += "SSH_AUTH_SOCK"'
+
+- name: Refresh APT sources
+  apt:
+    update_cache: yes
+    cache_valid_time: 600
+  when: ansible_os_family == 'Debian'

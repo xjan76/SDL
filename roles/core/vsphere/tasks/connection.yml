@@ -1,0 +1,13 @@
+- name: Setting connection IP
+  set_fact:
+    ansible_host: "{{ primary_network.ipv4 | ipaddr('address') }}"
+  when: primary_network.ipv4 is defined
+
+- name: Setting Ansible connection
+  set_fact:
+    ansible_connection: "{{ real_connection_plugin }}"
+    ansible_user: "{{ ansible_deployed_user if ansible_deployed_user is defined else ansible_user }}"
+
+- name: Waiting for connection
+  wait_for_connection:
+    timeout: 120

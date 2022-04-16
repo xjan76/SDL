@@ -1,0 +1,3 @@
+- name: Start VM customization
+  include_role:
+    name: "vm/{{ role }}"

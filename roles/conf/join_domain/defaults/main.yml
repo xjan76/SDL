@@ -1,0 +1,5 @@
+---
+state: domain
+primary_domain_controller: "{{ dns_servers[0] }}"
+domain_join_user: "{{ domain_admin_user }}"
+domain_join_password: "{{ domain_admin_password }}"

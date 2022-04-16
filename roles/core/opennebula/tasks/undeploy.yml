@@ -1,0 +1,13 @@
+- name: Undeploying VM
+  community.general.one_vm:
+    api_url: "{{ one_defaults.api_url }}"
+    api_username: "{{ one_defaults.api_username }}"
+    api_password: "{{ one_defaults.api_password }}"
+    count_attributes:
+      name: "{{ vm_name }}"
+    exact_count: 0
+  delegate_to: localhost
+
+- name: Stop executing when we are undeploying
+  meta: end_host
+  when: deploy_mode == 'undeploy'

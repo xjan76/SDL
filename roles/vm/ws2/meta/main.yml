@@ -1,0 +1,3 @@
+dependencies:
+  - role: conf/join_domain
+    when: fresh_deploy

@@ -1,0 +1,6 @@
+- name: Add deployable group for single host
+  add_host:
+    name: "{{ inventory_hostname }}"
+    groups: "{{ group_names + ['deployable'] }}"
+    role: "{{ role | default(inventory_hostname) }}"
+    parent_hostname: "{{ inventory_hostname }}"

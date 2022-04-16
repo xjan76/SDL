@@ -1,0 +1,131 @@
+vm1:
+  hostname: dc1
+  parent: windows
+  os: os_winserver
+  network:
+    name: networkname
+    ipv4: 10.0.1.99
+    ipv4_gateway: 10.0.1.1
+    vlan: 1
+  dns_servers:
+    dns1: 127.0.0.1
+    dns2: 8.8.8.8
+  ram: "16 GB"
+  windows_user_accounts:
+    username: Administrator
+    password: 
+  opennebula:
+    new_network: 
+      name: networkname
+      ipv4: 10.0.1.11
+      ipv4_gateway: 10.0.1.1
+
+vm2: 
+  hostname: observium
+  parent: linux
+  os: os_ubuntu
+  network:
+    name: networkname
+    ipv4: 10.0.1.98
+    ipv4_gateway: 10.0.1.1
+    vlan: 1
+  dns_servers:
+    dns1: 10.0.1.11
+    dns2: 
+  ram: "4 GB"
+  windows_user_accounts:
+    username: 
+    password: 
+  opennebula:
+    new_network:
+      name: networkname
+      ipv4: 10.0.1.15
+      ipv4_gateway: 10.0.1.1
+
+vm3:
+  hostname: 
+  parent: 
+  os:
+  network:
+    name: 
+    ipv4:
+    ipv4_gateway: 
+    vlan: 
+  dns_servers:
+    dns1:
+    dns2:
+  ram: 
+  windows_user_accounts:
+    username: 
+    password: 
+  opennebula:
+    new_network:
+      name: 
+      ipv4: 
+      ipv4_gateway: 
+    
+vm4:
+  hostname: 
+  parent: 
+  os:
+  network:
+    name: 
+    ipv4:
+    ipv4_gateway: 
+    vlan: 
+  dns_servers:
+    dns1:
+    dns2:
+  ram: 
+  windows_user_accounts:
+    username: 
+    password: 
+  opennebula:
+    new_network:
+      name: 
+      ipv4: 
+      ipv4_gateway: 
+    
+vm5:
+  hostname: 
+  parent: 
+  os:
+  network:
+    name: 
+    ipv4:
+    ipv4_gateway: 
+    vlan: 
+  dns_servers:
+    dns1:
+    dns2:
+  ram: 
+  windows_user_accounts:
+    username: 
+    password: 
+  opennebula:
+    new_network:
+      name: 
+      ipv4: 
+      ipv4_gateway: 
+    
+vm6:
+  hostname: 
+  parent: 
+  os:
+  network:
+    name: 
+    ipv4:
+    ipv4_gateway: 
+    vlan: 
+  dns_servers:
+    dns1:
+    dns2:
+  ram: 
+  windows_user_accounts:
+    username: 
+    password: 
+  opennebula:
+    new_network:
+      name: 
+      ipv4: 
+      ipv4_gateway: 

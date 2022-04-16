@@ -1,0 +1,4 @@
+---
+- name: Change Windows users' passwords
+  include_tasks: windows.yml
+  when: ansible_system == "Win32NT"

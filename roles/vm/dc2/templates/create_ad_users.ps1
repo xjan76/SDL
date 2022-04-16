@@ -1,0 +1,4 @@
+New-ADUser -Name "Alice" -DisplayName "Alice" -SamAccountName "alice" -UserPrincipalName 'alice@"{domain}"' -AccountPassword (ConvertTo-SecureString "Password.123" -AsPlainText -Force) -ChangePasswordAtLogon:$false -PasswordNeverExpires:$true -Enabled:$true
+New-ADUser -Name "Bob" -DisplayName "Bob" -SamAccountName "bob" -UserPrincipalName 'bob@"{domain}"' -AccountPassword (ConvertTo-SecureString "Password.123" -AsPlainText -Force) -ChangePasswordAtLogon:$false -PasswordNeverExpires:$true -Enabled:$true
+New-ADGroup -name "WS_RDP_Users" -GroupScope DomainLocal -GroupCategory Security
+Add-ADGroupMember -Identity "WS_RDP_Users" -Members "alice","bob"

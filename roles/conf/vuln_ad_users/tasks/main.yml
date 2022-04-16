@@ -1,0 +1,7 @@
+- name: Add users to domain admins group
+  win_domain_group_membership:
+    name: Domain Admins
+    members:
+      - alice
+      - bob
+    state: present

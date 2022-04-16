@@ -1,0 +1,17 @@
+network:
+  version: 2
+  ethernets:
+    {{ sorted_interfaces[0] }}:
+      addresses:
+      - {{ primary_network.ipv4 }}
+{%  if primary_network.ipv6 is defined %}
+      - {{ new_network.ipv6 }}
+{% endif %}
+      gateway4: {{ primary_network.ipv4_gateway }}
+      nameservers:
+        addresses:
+    {% for address in dns_servers %}
+    - {{ address }}
+    {% endfor %}
+    search:
+        - {{ domain }}

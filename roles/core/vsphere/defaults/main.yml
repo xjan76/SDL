@@ -1,0 +1,9 @@
+
+vm_name: "{{ exercise_name | lower }}_{{ parent_hostname }}"
+cpus: 2
+ram: "8 GB"
+device_type: 'vmxnet3'
+customization_options: {}
+
+real_connection_plugin: smart
+ansible_shell_type: sh

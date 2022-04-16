@@ -1,0 +1,12 @@
+---
+- name: Switching to domain admin account...
+  set_fact:
+    ansible_user: "{{ domain_admin_user }}@{{ ad_domain_name }}"
+
+- name: Installing powershell-yaml module...
+  community.windows.win_psmodule:
+    name: powershell-yaml
+    state: present
+
+- name: Configuring Exchange...
+  win_shell: "{{ lookup('template', 'Configure-Exchange.ps1') }}"

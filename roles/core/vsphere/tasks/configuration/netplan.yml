@@ -1,0 +1,10 @@
+- name: Prevent getting DHCP address
+  command: "ip link set down dev {{ sorted_interfaces[0] }}"
+
+- name: Upload netplan configuration
+  template:
+    src: netplan.yml.j2
+    dest: /etc/netplan/01-netcfg.yaml
+
+- name: apply netplan
+  command: netplan apply

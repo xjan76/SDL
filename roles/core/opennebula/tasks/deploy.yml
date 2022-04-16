@@ -1,0 +1,87 @@
+- name: Deployig VM
+  community.general.one_vm:
+    api_url: "{{ one_defaults.api_url }}"
+    api_username: "{{ one_defaults.api_username }}"
+    api_password: "{{ one_defaults.api_password }}"
+    template_name: "{{ nebula_template_name }}"
+    attributes:
+      name: "{{ vm_name }}"
+    networks:
+      - NETWORK: "{{ primary_network.name }}"
+    state: present
+  register: result
+  delegate_to: localhost
+  when: inventory_hostname != "exch"
+
+- name: Creating a new template for Exchange server
+  community.general.one_template:
+    api_url: "{{ one_defaults.api_url }}"
+    api_username: "{{ one_defaults.api_username }}"
+    api_password: "{{ one_defaults.api_password }}"
+    name: Exchange template
+    template: |
+      CONTEXT = [
+        NETWORK = "YES",
+        SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]" ]
+      CPU = "1"
+      NAME = "Exchange template"
+      DISK = [
+        IMAGE = "Windows datablock",
+        IMAGE_UNAME = "oneadmin" ]
+      DISK = [
+        IMAGE = "Exchange ISO",
+        IMAGE_UNAME = "oneadmin" ]
+      GRAPHICS = [
+        LISTEN = "0.0.0.0",
+        TYPE = "SPICE" ]
+      HOT_RESIZE = [
+        CPU_HOT_ADD_ENABLED = "NO",
+        MEMORY_HOT_ADD_ENABLED = "NO" ]
+      HYPERVISOR = "kvm"
+      INPUT = [
+        BUS = "usb",
+        TYPE = "tablet" ]
+      INPUTS_ORDER = ""
+      LABELS = "Template_windows_server_1809"
+      LOGO = "images/logos/windows8.png"
+      MEMORY = "16384"
+      MEMORY_UNIT_COST = "MB"
+      NIC = [
+        NETWORK = "{{ primary_network.name }}",
+        NETWORK_UNAME = "oneadmin",
+        RDP = "YES",
+        SECURITY_GROUPS = "0",
+        SSH = "YES" ]
+      OS = [
+        BOOT = "disk0",
+        FIRMWARE = "",
+        FIRMWARE_SECURE = "YES" ]
+      SCHED_DS_REQUIREMENTS = "ID=\"0\""
+      SCHED_REQUIREMENTS = "ID=\"1\" | CLUSTER_ID=\"0\""
+      VCPU = "2"
+  delegate_to: localhost
+  register: exchange_template
+  when: inventory_hostname == "exch"
+
+- name: Deployig Exchange VM
+  community.general.one_vm:
+    api_url: "{{ one_defaults.api_url }}"
+    api_username: "{{ one_defaults.api_username }}"
+    api_password: "{{ one_defaults.api_password }}"
+    template_id: "{{ exchange_template.id }}"
+    attributes:
+      name: "{{ vm_name }}"
+    networks:
+      - NETWORK: "{{ primary_network.name }}"
+    wait_timeout: 600
+  register: result
+  delegate_to: localhost
+  when: inventory_hostname == "exch"
+
+- set_fact:
+    fresh_deploy: true
+
+- name: Print VM properties
+  ansible.builtin.debug:
+    msg: result
+  delegate_to: localhost

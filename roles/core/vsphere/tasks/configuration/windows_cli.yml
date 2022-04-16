@@ -1,0 +1,7 @@
+- name: Configure interfaces
+  win_shell: "{{ lookup('template', 'Configure-Network.ps1') }}"
+  loop: "{{ networks }}"
+  loop_control:
+    index_var: loop_index
+  vars:
+    ifname: "{{ win_sorted_interfaces[loop_index] }}"

@@ -1,0 +1,7 @@
+% if config["environment"]=="vsphere":
+vm_template: ${config["os_templates"]["os_linux"]["os_ubuntu"]}
+% elif config["environment"]=="opennebula":
+nebula_template_name: ${config["os_templates"]["os_linux"]["os_ubuntu"]}
+% endif
+
+customization_method: netplan

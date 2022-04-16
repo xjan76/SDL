@@ -1,0 +1,16 @@
+---
+- block:
+    - name: Adding machine to domain
+      ansible.windows.win_domain_membership:
+        dns_domain_name: "{{ ad_domain_name }}"
+        hostname: "{{ parent_hostname }}"
+        domain_admin_user: "{{ domain_join_user }}@{{ ad_domain_name }}"
+        domain_admin_password: "{{ domain_join_password }}"
+        state: domain
+      register: win_domain
+
+    - name: Rebooting machine
+      ansible.windows.win_reboot:
+      when: win_domain.reboot_required
+
+  when: state == "domain"

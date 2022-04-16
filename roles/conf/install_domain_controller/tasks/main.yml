@@ -1,0 +1,51 @@
+---
+- name: Install AD-Domain-Services role
+  win_feature:
+    name: AD-Domain-Services
+    include_management_tools: yes
+    state: present
+  register: win_feature
+
+- name: Promoting server to DC
+  win_domain_controller:
+    dns_domain_name: "{{ ad_domain_name }}"
+    domain_admin_user: "{{ domain_admin_user }}@{{ ad_domain_name }}"
+    domain_admin_password: "{{ domain_admin_password }}"
+    safe_mode_password: "{{ dc_safe_mode_password }}"
+    state: domain_controller
+  register: win_domain_controller
+
+- block:
+    - name: Rebooting
+      win_reboot:
+
+    - name: Verifying DC installation
+      win_shell: "{{ lookup('file', 'Verify-DC.ps1') }}"
+
+    - name: DC post-reboot check
+      include_role:
+        name: conf/dc_check
+
+    - name: Gathering DC facts
+      gather_facts:
+
+    - name: Checking User Accounts
+      include_role:
+        name: core/users
+
+    - name: Re-Setting Ansible connection
+      set_fact:
+        ansible_user: "{{ ansible_user }}"
+        ansible_password: "{{ ansible_password }}"
+
+    - name: Rebooting...
+      win_reboot:
+
+    - name: DC post-reboot check
+      include_role:
+        name: conf/dc_check
+
+  when: win_domain_controller.changed
+
+- name: Verifying DC DNS servers
+  win_shell: "{{ lookup('template', 'Verify-DNS.ps1') }}"

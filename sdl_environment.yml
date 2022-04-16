@@ -1,0 +1,43 @@
+# define your hypervisor
+environment: opennebula #vsphere or opennebula
+
+#define environment access parameters:
+env_hostname:  #ip or FQDN
+env_username: 
+env_password: 
+
+#define only if environment = vsphere
+vs_datacenter: Datacenter
+vs_root_folder: VM_folder
+vs_folder: VM_folder
+vs_cluster: Cluster01
+vs_datastore: Datastore
+vs_resource_pool: RP_C01
+vs_dvswitch: DSwitch
+
+exercise_name: SDL
+
+#define exercise domain and default DNS servers
+ex_domain: thesis.demo
+ex_dns1: 
+ex_dns2: 
+
+# define ansible deployer account
+ans_username: 
+ans_password: 
+
+#Linux hardware defaults
+lin_cpus: 2 
+lin_ram: "4 GB" #insert in gigabytes, for example "8 GB"
+
+#windows hardware defaults
+win_cpus: 2
+win_ram: "16 GB" #insert in gigabytes, for example "8 GB"
+
+#define OS template names
+os_templates:
+  os_linux:
+    os_ubuntu: ubuntu_template
+  os_windows:
+    os_winserver: template_windows_server_1809
+    os_win10_21h1: template_windows_10_21h1

@@ -1,0 +1,118 @@
+---
+- name: Mounting exchange iso 
+  vmware_guest:
+    name: "{{ vm_name }}"
+    state: present
+    cdrom:
+      - controller_number: 0
+        unit_number: 0
+        type: iso
+        iso_path: "{{ exchange_iso_path }}"
+  delegate_to: localhost
+  when: vsphere_deploy
+
+- name: Installing exchange prerequisites I
+  win_chocolatey:
+    name: vcredist2012
+    state: present
+
+- name: Installing exchange prerequisites II
+  win_package:
+    path: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
+    product_id: "{929FBD26-9020-399B-9A7A-751D61F0B942}"
+    arguments: /q
+
+- name: Installing exchange prerequisites III
+  win_package:
+    path: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
+    product_id: "UCMA4"
+    arguments: /q
+
+- name: Rebooting...
+  win_reboot:
+
+- name: Occasionally, a second reboot is required due to Updates
+  win_reboot:
+
+- name: Instaling Exchange Windows features
+  win_feature:
+    name:
+      - Server-Media-Foundation
+      - NET-Framework-45-Features
+      - RPC-over-HTTP-proxy
+      - RSAT-Clustering
+      - RSAT-Clustering-CmdInterface
+      - RSAT-Clustering-Mgmt
+      - RSAT-Clustering-PowerShell
+      - WAS-Process-Model
+      - Web-Asp-Net45
+      - Web-Basic-Auth
+      - Web-Client-Auth
+      - Web-Digest-Auth
+      - Web-Dir-Browsing
+      - Web-Dyn-Compression
+      - Web-Http-Errors
+      - Web-Http-Logging
+      - Web-Http-Redirect
+      - Web-Http-Tracing
+      - Web-ISAPI-Ext
+      - Web-ISAPI-Filter
+      - Web-Lgcy-Mgmt-Console
+      - Web-Metabase
+      - Web-Mgmt-Console
+      - Web-Mgmt-Service
+      - Web-Net-Ext45
+      - Web-Request-Monitor
+      - Web-Server
+      - Web-Stat-Compression
+      - Web-Static-Content
+      - Web-Windows-Auth
+      - Web-WMI
+      - Windows-Identity-Foundation
+      - RSAT-ADDS
+    state: present
+  register: win_feature
+
+- name: Rebooting, if required...
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Setting Domain Admin as ansible_user...
+  set_fact:
+    ansible_user: "{{ domain_admin_user }}@{{ ad_domain_name }}"
+    ansible_password: "{{ domain_admin_password }}"
+
+- name: Checking if Domain Controller is available...
+  win_shell: "{{ lookup('template', 'Check-DCAvailability.ps1') }}"
+
+- name: Installing Exchange...
+  win_package:
+    path: D:\Setup.EXE
+    product_id: "{CD981244-E9B8-405A-9026-6AEB9DCEF1F1}"
+    arguments: "/OrganizationName:{{ domain_netbios }} /IAcceptExchangeServerLicenseTerms /Mode:\
+      Install /Role:Mailbox, ManagementTools /InstallWindowsComponents /DisableAMFiltering /CustomerFeedbackEnabled:False"
+  register: exchange_installation
+
+- name: Adding admin accounts to Organization Management group...
+  community.windows.win_domain_group_membership:
+    name: Organization Management
+    members: "{{ item.username }}"
+    state: present
+  loop: "{{ user_accounts }}"
+  loop_control:
+    label: "{{ item.username }}"
+
+- name: Unmounting exchange iso...
+  vmware_guest:
+    name: "{{ vm_name }}"
+    state: present
+    cdrom:
+      - controller_number: 0
+        unit_number: 0
+        type: none
+  delegate_to: localhost
+  when: vsphere_deploy
+  
+- name: Rebooting...
+  win_reboot:
+  when: exchange_installation.changed

@@ -1,0 +1,3 @@
+sorted_interfaces: "{{ ansible_interfaces | sort }}"
+win_sorted_interfaces: "{{ ansible_interfaces | map(attribute='connection_name') | sort }}"
+networks: "{{ [primary_network] + extra_networks | default([]) }}"

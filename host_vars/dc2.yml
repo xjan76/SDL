@@ -1,0 +1,26 @@
+ram: "16 GB"
+
+primary_network:
+  name: 
+  ipv4: 
+  ipv4_gateway:
+  vlan: 
+
+new_network:
+  name: 
+  ipv4: 
+  ipv4_gateway: 
+
+user_accounts:
+  - username: 
+    password:
+
+dns_servers:
+  - 
+  -
+
+ad_domain_name: "{{ domain }}"
+domain_admin_user: "{{user_accounts[0].username}}"
+domain_admin_password: "{{ user_accounts[0].password }}"
+dc_safe_mode_password: "{{ domain_admin_password }}"
+domain_netbios: "{{ domain.split('.')[0] | lower }}"

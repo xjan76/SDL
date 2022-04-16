@@ -1,0 +1,7 @@
+---
+- name: Creating AD users
+  win_shell: "{{ lookup('template', 'create_ad_users.ps1') }}"
+
+- name: Include vulnerability - ad users 
+  include_role:
+    name: conf/vuln_ad_users

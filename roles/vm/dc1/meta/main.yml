@@ -1,0 +1,3 @@
+dependencies:
+  - role: conf/install_primary_domain_controller
+    when: fresh_deploy

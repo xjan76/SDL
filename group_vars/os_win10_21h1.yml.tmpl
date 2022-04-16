@@ -1,0 +1,5 @@
+% if config["environment"]=="vsphere":
+vm_template: ${config["os_templates"]["os_windows"]["os_win10_21h1"]}
+% elif config["environment"]=="opennebula":
+nebula_template_name: ${config["os_templates"]["os_windows"]["os_win10_21h1"]}
+% endif

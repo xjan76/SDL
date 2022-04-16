@@ -1,0 +1,7 @@
+---
+- name: Add WS_RDP_Users to RDP group
+  ansible.windows.win_group_membership:
+    name: Remote Desktop Users
+    members:
+      - '{{ domain_netbios }}\WS_RDP_Users'
+    state: present
