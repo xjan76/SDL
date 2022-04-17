@@ -8,9 +8,9 @@ primary_network:
   vlan: ${config["network"]["vlan"]}
 
 new_network:
-  name: ${config["opennebula"]["initial_network"]["name"]}
-  ipv4: ${config["opennebula"]["initial_network"]["ipv4"]}
-  ipv4_gateway: ${config["opennebula"]["initial_network"]["ipv4_gateway"]}
+  name: ${config["opennebula"]["new_network"]["name"]}
+  ipv4: ${config["opennebula"]["new_network"]["ipv4"]}
+  ipv4_gateway: ${config["opennebula"]["new_network"]["ipv4_gateway"]}
 
 user_accounts:
   - username: ${config["windows_user_accounts"]["username"]}

@@ -1,0 +1,73 @@
+{
+
+  "variables": 
+  {
+    "username": "",
+    "password_vsphere": "",
+    "vcenter_server": "",
+    "datacenter": "",
+    "cluster": "",
+    "datastore": "",
+    "templates_folder": "",
+    "ssh_user": "",
+    "windows_user": "Administrator",
+    "password": "Password.123",
+    "template_network": "",
+    "vmware_tools_windows": "",
+    "windows_server_1809_iso": "",
+    "windows_10_21h1_iso": "",
+    "ubuntu2004_server_iso": ""
+  },
+  "builders": [
+    {
+      "CPU_hot_plug": true,
+      "NestedHV": true,
+      "RAM": 8192,
+      "RAM_hot_plug": true,
+      "boot_command": "<enter><wait><enter><wait><enter>",
+      "boot_wait": "2s",
+      "cluster": "{{user `cluster`}}",
+      "communicator": "ssh",
+      "configuration_parameters": {
+        "svga.autodetect": true,
+        "tools_upgrade_policy": true
+      },
+      "cpus": 2,
+      "datacenter": "{{user `datacenter`}}",
+      "datastore": "{{user `datastore`}}",
+      "disk_controller_type": "pvscsi",
+      "firmware": "efi",
+      "floppy_files": "windows_10_21h1/Autounattend.xml",
+      "folder": "{{user `templates_folder`}}",
+      "guest_os_type": "windows9_64Guest",
+      "insecure_connection": true,
+      "iso_paths": [
+        "{{user `windows_10_21h1_iso`}}",
+        "{{user `vmware_tools_windows`}}"
+      ],
+      "network_adapters": [
+        {
+          "network": "{{user `template_network`}}",
+          "network_card": "vmxnet3"
+        }
+      ],
+      "password": "{{user `password_vsphere`}}",
+
+      "shutdown_command": "shutdown /S /T 30",
+      "ssh_password": "{{user `password`}}",
+      "ssh_timeout": "15m",
+      "ssh_username": "{{user `windows_user`}}",
+      "storage": [
+        {
+          "disk_size": 50000,
+          "disk_thin_provisioned": true
+        }
+      ],
+      "type": "vsphere-iso",
+      "username": "{{user `username`}}",
+      "vcenter_server": "{{user `vcenter_server`}}",
+      "vm_name": "template_windows_10_21h1",
+      "vm_version": "14"
+    }
+  ]
+}
