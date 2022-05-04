@@ -5,6 +5,6 @@ reg add HKLM\Software\OpenSSH /v DefaultShell /t REG_SZ /d C:\Windows\System32\W
 C:\ProgramData\chocolatey\choco.exe install openssh -params /SSHServerFeature -y
 
 New-LocalUser INSERT_USERNAME -Password (ConvertTo-SecureString INSERT_PASSWORD -AsPlainText -force) -FullName INSERT_USERNAME
-Add-LocalGroupMember -Group Administrators -Member sdl
+Add-LocalGroupMember -Group Administrators -Member INSERT_USERNAME
 
 Set-Service wuauserv -StartupType Disabled
