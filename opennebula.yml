@@ -19,11 +19,6 @@
   gather_facts: false
   strategy: host_pinned
 
-  pre_tasks:
-    - setup:
-        filter: "*_time"
-      delegate_to: localhost
-
   module_defaults:
     one_vm: "{{ one_defaults }}"
     one_host: "{{ one_defaults }}"
