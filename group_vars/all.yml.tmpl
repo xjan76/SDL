@@ -1,5 +1,4 @@
-# global defaults here
-#
+# When adding new hypervisors, add new "elif" environment statements under the current ones, where needed.
 
 % if config["environment"]=="vsphere":
 datacenter: ${config["vs_datacenter"]}
