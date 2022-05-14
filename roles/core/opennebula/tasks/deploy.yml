@@ -1,3 +1,7 @@
+- name: Check whether VM exists
+  local_action: "shell ping -q -c 3 -W 3 {{ primary_ipv4 | default(new_network.ipv4) | ipaddr('address') }}"
+  register: ping_result
+
 - name: Deployig VM
   community.general.one_vm:
     api_url: "{{ one_defaults.api_url }}"
@@ -11,7 +15,7 @@
     state: present
   register: result
   delegate_to: localhost
-  when: inventory_hostname != "exch"
+  when: inventory_hostname != "exch" and (('0 received' in ping_result.stdout) or ('0 packets received' in ping_result.stdout))
 
 - name: Creating a new template for Exchange server
   community.general.one_template:
@@ -61,7 +65,7 @@
       VCPU = "2"
   delegate_to: localhost
   register: exchange_template
-  when: inventory_hostname == "exch"
+  when: inventory_hostname == "exch" and (('0 received' in ping_result.stdout) or ('0 packets received' in ping_result.stdout))
 
 - name: Deployig Exchange VM
   community.general.one_vm:
@@ -76,7 +80,7 @@
     wait_timeout: 600
   register: result
   delegate_to: localhost
-  when: inventory_hostname == "exch"
+  when: inventory_hostname == "exch" and (('0 received' in ping_result.stdout) or ('0 packets received' in ping_result.stdout))
 
 - set_fact:
     fresh_deploy: true
