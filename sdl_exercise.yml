@@ -3,13 +3,13 @@ vm1:
   parent: windows
   os: os_winserver
   network:
-    name: networkname
+    name: network1
     ipv4: 10.0.1.99
     ipv4_gateway: 10.0.1.1
     vlan: 1
   dns_servers:
     dns1: 127.0.0.1
-    dns2: 8.8.8.8
+    dns2: 
   cpu: 
   ram: "16 GB"
   windows_user_accounts:
@@ -17,7 +17,7 @@ vm1:
     password: 
   opennebula:
     new_network: 
-      name: networkname
+      name: network1
       ipv4: 10.0.1.11
       ipv4_gateway: 10.0.1.1
 
@@ -26,13 +26,13 @@ vm2:
   parent: linux
   os: os_ubuntu
   network:
-    name: networkname
+    name: network1
     ipv4: 10.0.1.98
     ipv4_gateway: 10.0.1.1
     vlan: 1
   dns_servers:
     dns1: 10.0.1.11
-    dns2:
+    dns2: 10.0.1.12
   cpu: 
   ram: "4 GB"
   windows_user_accounts:
@@ -40,98 +40,98 @@ vm2:
     password: 
   opennebula:
     new_network:
-      name: networkname
+      name: network1
       ipv4: 10.0.1.15
       ipv4_gateway: 10.0.1.1
 
 vm3:
-  hostname: 
-  parent: 
-  os:
+  hostname: dc2
+  parent: windows
+  os: os_winserver
   network:
-    name: 
-    ipv4:
-    ipv4_gateway: 
-    vlan: 
+    name: network1
+    ipv4: 10.0.1.99
+    ipv4_gateway: 10.0.1.1
+    vlan: 1
   dns_servers:
-    dns1:
-    dns2:
+    dns1: 10.0.1.11
+    dns2: 127.0.0.1
   cpu:
-  ram: 
+  ram: "16 GB"
   windows_user_accounts:
-    username: 
+    username: Administrator
     password: 
   opennebula:
     new_network:
-      name: 
-      ipv4: 
-      ipv4_gateway: 
+      name: network1
+      ipv4: 10.0.1.12
+      ipv4_gateway: 10.0.1.1
     
-vm4:
-  hostname: 
-  parent: 
-  os:
+vm4: 
+  hostname: exch
+  parent: windows
+  os: os_winserver
   network:
-    name: 
-    ipv4:
-    ipv4_gateway: 
-    vlan: 
+    name: network1
+    ipv4: 10.0.1.99
+    ipv4_gateway: 10.0.1.100
+    vlan: 1
   dns_servers:
-    dns1:
-    dns2:
-  cpu:
-  ram: 
+    dns1: 10.0.1.11
+    dns2: 10.0.1.12
+  cpu: 4
+  ram: "16 GB"
   windows_user_accounts:
-    username: 
+    username: Administrator
     password: 
   opennebula:
     new_network:
-      name: 
-      ipv4: 
-      ipv4_gateway: 
+      name: network1
+      ipv4: 10.0.1.13
+      ipv4_gateway: 10.0.1.1
     
 vm5:
-  hostname: 
-  parent: 
-  os:
+  hostname: ws1
+  parent: windows
+  os: os_win10_21h1
   network:
-    name: 
-    ipv4:
-    ipv4_gateway: 
-    vlan: 
+    name: networkname
+    ipv4: 10.0.1.100
+    ipv4_gateway: 10.0.1.1
+    vlan: 1
   dns_servers:
-    dns1:
-    dns2:
+    dns1: 10.0.1.11
+    dns2: 10.0.1.12
   cpu:
   ram: 
   windows_user_accounts:
-    username: 
+    username: Administrator
     password: 
   opennebula:
     new_network:
-      name: 
-      ipv4: 
-      ipv4_gateway: 
+      name: network1
+      ipv4: 10.0.1.20
+      ipv4_gateway: 10.0.1.1
     
 vm6:
-  hostname: 
-  parent: 
-  os:
+  hostname: ws2
+  parent: windows
+  os: os_win10_21h1
   network:
-    name: 
-    ipv4:
-    ipv4_gateway: 
-    vlan: 
+    name: network1
+    ipv4: 10.0.1.100
+    ipv4_gateway: 10.0.1.1
+    vlan: 1
   dns_servers:
-    dns1:
-    dns2:
+    dns1: 10.0.1.11
+    dns2: 10.0.1.12
   cpu:
   ram: 
   windows_user_accounts:
-    username: 
+    username: Administrator
     password: 
   opennebula:
     new_network:
-      name: 
-      ipv4: 
-      ipv4_gateway: 
+      name: network1
+      ipv4: 10.0.1.21
+      ipv4_gateway: 10.0.1.1
