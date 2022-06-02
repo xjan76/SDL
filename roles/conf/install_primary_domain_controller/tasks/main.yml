@@ -22,7 +22,7 @@
         reboot_timeout: 1200
 
     - name: Checking PDC availability
-      win_shell: "{{ lookup('file', 'Check-PDCAvailability.ps1') }}"
+      win_shell: "{{ lookup('file', 'Check-PDC.ps1') }}"
       when: win_domain.changed
 
     - name: Gathering facts

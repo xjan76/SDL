@@ -22,7 +22,6 @@
   loop: "{{ user_accounts + extra_accounts }}"
   when:
     - ansible_facts.windows_domain_role == "Primary domain controller"
-    - item.username != admin_account
 
 - name: Creating a profile for required accounts
   win_user_profile:

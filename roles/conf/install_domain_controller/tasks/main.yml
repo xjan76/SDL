@@ -19,9 +19,6 @@
     - name: Rebooting
       win_reboot:
 
-    - name: Verifying DC installation
-      win_shell: "{{ lookup('file', 'Verify-DC.ps1') }}"
-
     - name: DC post-reboot check
       include_role:
         name: conf/dc_check
@@ -33,12 +30,12 @@
       include_role:
         name: core/users
 
-    - name: Re-Setting Ansible connection
+    - name: Setting Ansible connection
       set_fact:
         ansible_user: "{{ ansible_user }}"
         ansible_password: "{{ ansible_password }}"
 
-    - name: Rebooting...
+    - name: Rebooting
       win_reboot:
 
     - name: DC post-reboot check

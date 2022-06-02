@@ -1,4 +1,4 @@
-- name: Add deployable group for single host
+- name: Configuring Ansible targets
   add_host:
     name: "{{ inventory_hostname }}"
     groups: "{{ group_names + ['deployable'] }}"

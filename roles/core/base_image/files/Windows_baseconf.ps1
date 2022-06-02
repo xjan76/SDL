@@ -1,5 +1,3 @@
-$ErrorActionPreference = 'Stop'
-
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted -Force
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy Unrestricted -Force
 
@@ -11,7 +9,3 @@ powercfg -change -monitor-timeout-dc 0
 powercfg -change -standby-timeout-dc 0
 powercfg -change -disk-timeout-dc 0
 powercfg -change -hibernate-timeout-dc 0
-
-Set-NetFirewallRule -DisplayName "Network Discovery*" -Enabled false
-
-if ((Get-NetConnectionProfile | Select-Object -ExpandProperty NetworkCategory) -ne "DomainAuthenticated"){Set-NetConnectionProfile -NetworkCategory Private}

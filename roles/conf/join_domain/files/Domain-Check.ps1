@@ -1,11 +1,3 @@
-$ErrorActionPreference = "Stop"
-$domaininformation = (Get-WmiObject win32_computersystem).partofdomain
-if ($domaininformation -eq $true) {
-    if (((Get-ComputerInfo).OsProductType) -eq "WorkStation") {
-        Restart-Service Netlogon
-    }
-    Test-ComputerSecureChannel
-    
-} else {   
-    Write-Host "Something went wrong"
-}
+$domainstatus = (Get-WmiObject win32_computersystem).partofdomain
+if ($domainstatus -eq $true){ Test-ComputerSecureChannel} 
+else {write-host "not domain joined"}

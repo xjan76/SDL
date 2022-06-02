@@ -18,7 +18,7 @@
 - name: Clone VM
   vmware_guest:
     wait_for_customization: "{{ True if customization_options != {} else False }}"
-    wait_for_ip_address: "{{ True if ip_offset is not defined else False }}"
+    wait_for_ip_address: "{{ False }}"
     datacenter: "{{ datacenter }}"
     name: "{{ vm_name }}"
     template: "{{ vm_template }}"
